@@ -37,11 +37,13 @@ class PostService
             'published_at' => $dto->publishedAt,
             'category_id' => $dto->categoryId,
         ]);
-        ActivityLogService::log('created', $post);
+        $adminId = auth()->id();
         if ($post->status === 'Scheduled') {
-            PublishScheduledPostJob::dispatch($post)
-                ->delay($post->published_at);
+            PublishScheduledPostJob::dispatch($post,$adminId)
+                ->delay($post->published_at)
+                ->afterCommit();;
         }
+        ActivityLogService::log('created', $post);
 
         return $post;
     }
