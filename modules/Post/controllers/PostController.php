@@ -47,7 +47,6 @@ class PostController extends \App\Http\Controllers\Controller
     }
     public function destroy( $post)
     {
-
         $post=Post::where('id',$post)->first();
         $this->postservice->delete($post);
         return redirect()->back()->with('success', 'Post deleted');
